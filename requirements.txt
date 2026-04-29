@@ -1,0 +1,17 @@
+# Core numerical stack
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+
+# Deep learning
+torch>=2.0
+
+# Graph pruning baselines
+networkx>=3.0
+
+# Plotting
+matplotlib>=3.7
+
+# Config / utilities
+PyYAML>=6.0
+psutil>=5.9
