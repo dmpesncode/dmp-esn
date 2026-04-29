@@ -1,0 +1,10 @@
+.vscode/
+.venv/
+
+data_original/
+results_v1/
+src/extra_code/
+
+static/gpu0.yml
+static/gpu1.yml
+static/gpu2.yml

@@ -1,0 +1,172 @@
+#====================== Training Data Collection Config ======================#
+data:
+  root: "./data"
+  datasets:
+    - name: electricity
+      file: electricity.csv
+    - name: mackey
+      file: mackey.csv
+    - name: solar
+      file: solar.csv
+    - name: temperature
+      file: temperature.csv
+    - name: wind
+      file: wind.csv
+
+
+#====================== GPU Setting Config ======================#
+gpus_setting:
+  device: auto
+  gpus: [0, 1, 2]
+
+
+#====================== Saving Results Config ======================#
+save_dir:
+  results_root: "results"
+
+
+#====================== DMP / Ours Config ======================#
+# DMP is the cleaned public name.
+# Keep "ours" in the training script only if older code expects it.
+dmp:
+  tau: 1
+  horizons: [10, 20, 30]
+  prune_ratios: [0.10, 0.20, 0.30]
+  seeds: [0, 1, 2, 3, 4]
+  skip_existing: true
+
+  # Shared ESN hyperparameters
+  leaky_rate: 0.5
+  spectral_radius: 0.95
+  input_scaling: 0.5
+  bias_scaling: 0.2
+  feedback_scaling: 0.0
+  sparsity: 0.1
+  ridge_alpha: 1e-4
+  normalize_states: false
+  use_feedback: false
+
+  # DMP scoring
+  energy_tau: 0.90
+  gramian_energy_tau: 0.90   # legacy alias, safe to keep
+  gramian_chunk_size: 128
+
+  # Paper-clean default.
+  # Use "hybrid" only if the paper explicitly reports the hybrid variant.
+  score_mode: dynamic_only
+  alpha_dynamic: 1.0
+  beta_readout: 0.0
+  gamma_occupancy: 0.0
+
+  # Optional hybrid variant:
+  # score_mode: hybrid
+  # alpha_dynamic: 0.70
+  # beta_readout: 0.30
+  # gamma_occupancy: 0.15
+
+  # Pruning schedule / stabilization
+  progressive: true
+  progressive_step_ratio: 0.05
+  match_jacobian_energy_density: true
+  fallback_match_spectral_radius: true
+
+  reservoir_sizes: [100, 200, 300, 500, 700, 1000]
+
+
+# Backward-compatible alias.
+# Keep this only if your training script still reads cfg["ours"].
+ours:
+  inherit_from: dmp
+
+
+#====================== SOTA Baselines Config ======================#
+base_esn:
+  reservoir_sizes: [100, 200, 300, 500, 700, 1000]
+  seeds: [0, 1, 2, 3, 4]
+  leaky_rate: 0.5
+  spectral_radius: 0.95
+  input_scaling: 0.5
+  bias_scaling: 0.2
+  feedback_scaling: 0.0
+  sparsity: 0.1
+  ridge_alpha: 1e-4
+  normalize_states: false
+  use_feedback: false
+
+
+betweenness:
+  reservoir_sizes: [500, 700, 1000]
+  seeds: [0, 1, 2, 3, 4]
+  prune_ratio: 0.20
+  prune_sr_iters: 30
+  leaky_rate: 0.5
+  spectral_radius: 0.95
+  input_scaling: 0.5
+  bias_scaling: 0.2
+  feedback_scaling: 0.0
+  sparsity: 0.1
+  ridge_alpha: 1e-4
+  normalize_states: false
+  use_feedback: false
+
+
+closeness:
+  reservoir_sizes: [500, 700, 1000]
+  seeds: [0, 1, 2, 3, 4]
+  prune_ratio: 0.20
+  prune_sr_iters: 30
+  leaky_rate: 0.5
+  spectral_radius: 0.95
+  input_scaling: 0.5
+  bias_scaling: 0.2
+  feedback_scaling: 0.0
+  sparsity: 0.1
+  ridge_alpha: 1e-4
+  normalize_states: false
+  use_feedback: false
+
+
+leaky_esn:
+  reservoir_sizes: [500, 700, 1000]
+  seeds: [0, 1, 2, 3, 4]
+  leaky_rate: 0.5
+  spectral_radius: 0.8
+  input_scaling: 0.5
+  bias_scaling: 0.2
+  sparsity_zero_frac: 0.1
+  ridge_alpha: 1e-4
+
+
+deep_esn:
+  reservoir_sizes: [500, 700, 1000]
+  seeds: [0, 1, 2, 3, 4]
+
+  # Deep ESN architecture
+  n_layers: 3
+
+  # Dynamics
+  leaky_rate: 0.5
+  spectral_radius: 0.8
+
+  # Input / layer scaling
+  input_scaling: 0.3
+  inter_layer_scaling: 0.2
+  bias_scaling: 0.2
+
+  # Reservoir sparsity
+  sparsity_zero_frac: 0.1
+
+  # Readout regularization
+  ridge_alpha: 1e-4
+
+
+#====================== General Config =======================#
+general_config:
+  train_ratio: 0.7
+  test_ratio: 0.2
+  initial_ratio: 0.1
+  results_root_template: "results_unified_jacobian"
+
+  # Shared artifact options for standalone baselines
+  plot_first_n: 500
+  plot_dpi: 300
