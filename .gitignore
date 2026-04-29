@@ -13,3 +13,5 @@ static/gpu2.yml
 .vscode/
 .venv/
 src/extra_code/
+__pycache__/
+*.pyc
