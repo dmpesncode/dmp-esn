@@ -1,7 +1,9 @@
 .vscode/
 .venv/
 
-data_original/
+data/
+results/
+logs/
 results_v1/
 src/extra_code/
 
